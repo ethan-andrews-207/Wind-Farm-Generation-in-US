@@ -1,2 +1,2 @@
-# Wind Power in the United States: Comparing generation with capacity
+# Wind Farm Generation in US
  Data and accompanying analysis on power generation from US wind farms
