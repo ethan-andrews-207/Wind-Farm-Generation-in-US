@@ -1,5 +1,4 @@
 
-
 # %%
 from statistics import mode
 from unicodedata import name
@@ -202,7 +201,27 @@ wind_report=dp.Report(
     ),        
     ).save(path='plant_gen_report.html',formatting=dp.ReportFormatting(width=dp.ReportWidth.FULL))
 
-
+dp.Report(
+    dp.Page(
+        title='Overview',
+        blocks=[state_plant_chart]
+    ),
+    dp.Page(
+        title='Plants by Age and 2020 Capacity Factor*',
+        blocks=[cap_by_year_line
+        ,"*Only includes plants in operation with capacity factor between .05 and .7 that came online before 2020\n\n"]
+    ),
+    dp.Page(
+        title='Plants by Manufacturer',
+        blocks=[plants_by_manuf]
+    ),
+    dp.Page(title='Capacity Factor by NERC Region',
+            blocks=[cap_by_nerc]
+    ),
+    dp.Page(title='Net Generation by New York Wind Farms 2010-2020',
+            blocks=[gen_by_year_plant]
+    ),        
+    ).upload(name='Wind Power Generation Report')
 
 
 
