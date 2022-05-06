@@ -1,4 +1,4 @@
-#%% Reading in plant data and wind simulation sites
+#%% Reading in plant data and wind simulation site data from NREL
 import pandas as pd
 import geopandas as gpd
 
@@ -32,5 +32,6 @@ state=nearest.groupby('State')
 mean_dist=state['Distance'].mean()
 print(nearest['geometry'])
 
+#Writing out dataset to be used in analysis script
 nearest[['Plant Code','geometry','Distance','capacity_factor','wind_speed']].to_csv('nearest_sim.csv',index=False)
 # %%

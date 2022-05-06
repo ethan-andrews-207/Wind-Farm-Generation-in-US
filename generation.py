@@ -2,7 +2,7 @@
 import pandas as pd
 from numpy import disp, std
 
-#%% V1. GENERATION HISTORY FROM API
+#%%  Read in generation data generated from API script
 
 gen_history=pd.read_csv('gen_history.csv',dtype={'Plant Code':str,'period':str,'Net Gen':int})
 
@@ -17,6 +17,7 @@ gen_history['gen period']=pd.to_datetime(gen_history['gen period'])
 
 gen_history=gen_history.drop(columns=['month','day','period'])
 
+#%%Trim and aggregate to annual generation for 2020
 gen_2020=gen_history.query("year=='2020'")
 
 gen_2020=gen_2020.groupby('Plant Code')
@@ -29,7 +30,7 @@ display(gen_history)
 display(gen_2020)
 
 
-#%% MERGE PLANT WITH GEN DATA
+#%% Merge generation data with plant characteristics
 
 plant_full=pd.read_csv('plant_full_info.csv',dtype={'Plant Code':str})
 
@@ -38,7 +39,7 @@ plant_history=plant_full.merge(gen_history,on='Plant Code',validate='1:m')
 plant_2020=plant_full.merge(gen_2020,on='Plant Code',validate='1:1')
 
 
-#%% Writing out data for other scripts
+#%% Writing out datasets to be used in analysis script
 
 plant_history.to_csv('plant_gen_history.csv',index=False)
 
