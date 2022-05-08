@@ -12,6 +12,7 @@ import datapane as dp
 dp.login(token='fe7f5674e813c8a7739d1b5171c3c01e6299bf6f')#For uploading visualizations to DataPane's website
 import datetime as dt
 import statsmodels.api as sm
+import dataframe_image as dfi
 
 
 pd.set_option("display.precision", 2)
@@ -84,13 +85,16 @@ X_statmodel=X_statmodel.loc[:,~mask]
 
 model=sm.OLS(Y,X_statmodel).fit(cov_type='HC1')
 
-print(model.summary(slim=True))
+model_summary=model.summary()
 
-plt.rc('figure', figsize=(12, 7))
-fig=plt.text(0.01, 0.05, str(model.summary()), {'fontsize': 10}, fontproperties = 'monospace') # approach improved by OP -> monospace!
-fig=plt.axis('off')
-fig=plt.tight_layout()
-plt.savefig('regression.png')
+results_as_html=model_summary.tables[1].as_html()
+coefs=pd.read_html(results_as_html, header=0, index_col=0)[0]
+
+coefs=coefs.rename(columns={'P>|z|':'P_value'})
+
+coefs_sig=coefs.query("P_value<=.05")
+
+coefs_sig.dfi.export('regression_results.png')
 
 # %% Grouping plants by state for monthly generation
 
