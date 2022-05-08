@@ -20,7 +20,7 @@ generation=pd.DataFrame()
 
 display(plant_full_api)
 
-#%Runs recursive API call using plant codes, extracts generation data, appends to generation DF
+#%%Runs recursive API call using plant codes, extracts generation data, appends to generation DF
 for index,plant_code in plant_full_api['Plant Code'].iteritems(): 
     payload={'api_key':key_value,'series_id':'ELEC.PLANT.GEN.'+plant_code+'-ALL-ALL.M'}
     response=requests.get(api,payload)
