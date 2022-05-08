@@ -50,7 +50,15 @@ This repository contains 3 externally-sourced input data files and 5 python scri
 4. 'geo_merge.py'
 - This script merges the NREL wind site model data onto the plant information intermediary output file 'plant_full_info' from the 'plants' script. Using the geopandas sjoin_nearest method, the script joins each plant to its nearest model site. The script then writes out an intermediary output file called 'nearest_sim.csv'
 5. 'analysis.py'
-- This script is composed of three main parts: cleaning, modelling, and visualizing
-- 
+- This script is composed of three main parts: cleaning/prepping, modelling, and visualizing
+- Cleaning/Prepping (lines 1:82): This section reads in three intermediary output files produced the above scripts- 'plant_gen_2020','plant_gen_history', and 'nearest_sim'. The model simulation data is merged onto the plant characteristics and generation DataFrames using the plant ID. I calculate capacity factor, which is the key outcome of interest in this analysis. Lastly, I create a sub-dataframe that isolates the plants that I will use in the regression by filtering out plants whose generation performance is skewed based on either data issues, being offline for a significant portion of the year, or having come online in 2020. I then split off a the Capacity Factor from the independent variables for modelling.
+- Modelling (lines 84:97): This section contains the linear OLS modelling of the filtered dataset (n=1094) using the statsmodels module. The results are written out as a picture just containing the variables that have statistically significant relationship to capacity factor at 95% level. That picture is also pasted above.
+- Visualizing (101:274): The remainder of the script contains the code that creates the charts that make up the Datapane report, including some aggregating for certain charts. The Altair module is used to create interactive visualizations, which is built on HTML. The code both saves a local HTML version of the report, but also uploads the report to Datapane's website, where it is publically accessible via the URL pasted above.
 
-*Capacity factor equals a plants actual generations expressed as a percentage of it's maximum possible generation if it were to operate at full capacity over the given period of time. In this analysis, I focus on plant-level capacity factor for 2020.
+## Findings
+
+I encourage viewers to explore the charts and regression results. One thing that motivated this project was the question of whether developers have gotten better at siting wind plants over time as technology and data has helped reduce uncertainty. The regression results show there is a sigificant negative relationship between plant age and capacity factor, supporting that hypothesis. Also of interest, certain states have significantly lower capacity factors than average. This analysis doesn't go far enough to answer why that is, but it left me wondering how plant curtailment shows up in this data. Unfortunately, there is not much data on curtailment at the plant level, but I believe there may be way to estimate it by combining this data with wholesale power market data, assuming plants with high marginal energy costs are the ones that get curtailed.
+
+
+
+*Capacity factor is a plants actual power generation expressed as a percentage of its maximum possible generation if it were to operate at full capacity over the given period of time. In this analysis, I focus on annual plant-level capacity factor for 2020.
